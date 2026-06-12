@@ -319,7 +319,7 @@
         </div>
 
         <div class="hud-panel hud-left-bottom" style="font-size: 0.8rem; color: #aaa;">
-            WASD / Arrows: Fly<br>Space: Vulcann Gun<br>M / Shift: Missile<br>P: Pause
+            WASD / Arrows: Fly<br>Space: Vulcan Gun<br>M / Shift: Missile<br>P: Pause
         </div>
         
         <div class="hud-panel hud-right-bottom" style="padding: 5px; width: 110px; height: 110px; position:relative;">
@@ -344,7 +344,7 @@
                 <div class="stat-text" style="font-size: 1.2rem;">Available Funds: <span class="text-green">$<span id="shop-coins">0</span></span></div>
             </div>
             <div class="shop-grid" id="shop-items-grid">
-                </div>
+            </div>
         </div>
         <button class="menu-btn" id="btn-close-shop">Return to Base</button>
     </div>
@@ -668,7 +668,7 @@ class PlayerJet {
             AudioSynth.playLaser(400, 0.1);
             playerProjectiles.push(new Bullet(this.x + this.width/2, this.y + 6, 16, 0, false));
             playerProjectiles.push(new Bullet(this.x + this.width/2, this.y - 6, 16, 0, false));
-            this.gunCooldown = 0.12; // 60FPS Frame Timing normalization equivalent (~7 rounds/sec)
+            this.gunCooldown = 0.12; 
         }
     }
 
@@ -687,7 +687,6 @@ class PlayerJet {
             this.targetLock = null;
             return;
         }
-        // Acquire closest valid forward target
         let bestTarget = null;
         let minDist = 700;
         for (let e of enemies) {
@@ -715,7 +714,6 @@ class PlayerJet {
             this.hp -= amt;
         }
         
-        // Critical System Hazard Warnings
         if (this.hp <= 0) {
             this.hp = 0;
             triggerExplosionSequence(this.x, this.y, 2.5);
@@ -727,33 +725,30 @@ class PlayerJet {
         ctx.save();
         ctx.translate(this.x, this.y);
         
-        // Tilt animation based on velocity vertical vector
         let tilt = this.vy * 0.04;
         ctx.rotate(tilt);
 
-        // Core Render Engine Geometry: SU-57 Vector Shape Blueprint Design
         ctx.fillStyle = this.color;
         ctx.strokeStyle = 'rgba(0, 243, 255, 0.4)';
         ctx.lineWidth = 1.5;
 
         ctx.beginPath();
-        ctx.moveTo(this.width/2, 0);                 // Nose cone tip
-        ctx.lineTo(this.width/4, -this.height/4);     // Canopy forward edge
-        ctx.lineTo(-this.width/6, -this.height/2);    // Port Main wing extension
-        ctx.lineTo(-this.width/4, -this.height/2);    // Port Wing trailing tip
-        ctx.lineTo(-this.width/8, -this.height/5);    // Inner wing structural join
-        ctx.lineTo(-this.width/2, -this.height/3);    // Left Rear Stabilizer wing
-        ctx.lineTo(-this.width/3, 0);                 // Engine exhaust structural bay divider
-        ctx.lineTo(-this.width/2, this.height/3);     // Right Rear Stabilizer wing
+        ctx.moveTo(this.width/2, 0);                 
+        ctx.lineTo(this.width/4, -this.height/4);     
+        ctx.lineTo(-this.width/6, -this.height/2);    
+        ctx.lineTo(-this.width/4, -this.height/2);    
+        ctx.lineTo(-this.width/8, -this.height/5);    
+        ctx.lineTo(-this.width/2, -this.height/3);    
+        ctx.lineTo(-this.width/3, 0);                 
+        ctx.lineTo(-this.width/2, this.height/3);     
         ctx.lineTo(-this.width/8, this.height/5);     
-        ctx.lineTo(-this.width/4, this.height/2);     // Starboard Wing trailing tip
-        ctx.lineTo(-this.width/6, this.height/2);     // Starboard Main wing extension
+        ctx.lineTo(-this.width/4, this.height/2);     
+        ctx.lineTo(-this.width/6, this.height/2);     
         ctx.lineTo(this.width/4, this.height/4);
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
 
-        // Canopy Glow HUD System
         ctx.fillStyle = 'rgba(0, 243, 255, 0.7)';
         ctx.beginPath();
         ctx.moveTo(this.width/4, 0);
@@ -763,7 +758,6 @@ class PlayerJet {
         ctx.closePath();
         ctx.fill();
 
-        // Engine Ignition Thruster Exhaust Afterburners
         let thrusterGlow = Math.random() * 15 + 10;
         let grad = ctx.createLinearGradient(-this.width/2, 0, -this.width/2 - thrusterGlow, 0);
         grad.addColorStop(0, '#ffaa00');
@@ -772,7 +766,6 @@ class PlayerJet {
         ctx.fillRect(-this.width/2 - 5, -8, thrusterGlow, 5);
         ctx.fillRect(-this.width/2 - 5, 3, thrusterGlow, 5);
 
-        // Active Energy Shield Hull Barrier Rendering
         if (this.shield > 0) {
             ctx.strokeStyle = `rgba(0, 243, 255, ${0.15 + Math.random()*0.15})`;
             ctx.lineWidth = 3;
@@ -807,7 +800,6 @@ class EnemyBase {
 
     update(dt) {
         this.patternTimer += dt;
-        // Standard Behavior Processors
         switch(this.type) {
             case 'DRONE':
                 this.x -= this.speed;
@@ -815,23 +807,20 @@ class EnemyBase {
                 break;
             case 'FIGHTER':
                 this.x -= this.speed;
-                // Move vertically toward player altitude occasionally
                 if (player && Math.random() < 0.02) {
                     this.y += (player.y - this.y) * 0.05;
                 }
                 break;
             case 'STEALTH':
                 this.x -= this.speed * 1.2;
-                // Radar evasion / sudden elevation change maneuver matrix
                 if (Math.sin(this.patternTimer * 2) > 0.7) this.y -= 2.5;
                 else if (Math.sin(this.patternTimer * 2) < -0.7) this.y += 2.5;
                 break;
             case 'BOMBER':
-                this.x -= this.speed * 0.7; // Heavy slow mover
+                this.x -= this.speed * 0.7;
                 break;
             case 'BOSS':
             case 'SUPER_BOSS':
-                // Tactical approach movement constraints
                 if (this.x > canvas.width * 0.75) {
                     this.x -= this.speed;
                 } else {
@@ -840,7 +829,6 @@ class EnemyBase {
                 break;
         }
 
-        // Weapon Execution Processors
         this.fireTimer += dt;
         if (this.fireTimer >= this.fireRate) {
             this.fireTimer = 0;
@@ -849,7 +837,7 @@ class EnemyBase {
     }
 
     executeWeaponSystem() {
-        if (this.x < 0 || this.x > canvas.width + 100) return; // Out of bounds execution guard
+        if (this.x < 0 || this.x > canvas.width + 100) return; 
         
         switch(this.type) {
             case 'DRONE':
@@ -861,14 +849,12 @@ class EnemyBase {
                 enemyProjectiles.push(new Bullet(this.x - this.width/2, this.y + 5, -11, 0, true));
                 break;
             case 'BOMBER':
-                // Aimed heavy munitions tracking vectors
                 if (player) {
                     let angle = Math.atan2(player.y - this.y, player.x - this.x);
                     enemyProjectiles.push(new Bullet(this.x - this.width/2, this.y, Math.cos(angle)*7, Math.sin(angle)*7, true, '#ff5500', 6));
                 }
                 break;
             case 'BOSS':
-                // Unleash bullet salvos and micro tracking ordinance rockets
                 enemyProjectiles.push(new Bullet(this.x - this.width/2, this.y - 20, -10, -2, true));
                 enemyProjectiles.push(new Bullet(this.x - this.width/2, this.y + 20, -10, 2, true));
                 if (player && Math.random() < 0.6) {
@@ -876,7 +862,6 @@ class EnemyBase {
                 }
                 break;
             case 'SUPER_BOSS':
-                // Heavy Arsenal Flagship barrage matrix
                 enemyProjectiles.push(new Bullet(this.x - 40, this.y - 40, -12, -1, true, '#ff0033', 5));
                 enemyProjectiles.push(new Bullet(this.x - 40, this.y + 40, -12, 1, true, '#ff0033', 5));
                 enemyProjectiles.push(new Bullet(this.x - 60, this.y, -14, 0, true, '#ffaa00', 4));
@@ -896,11 +881,10 @@ class EnemyBase {
             score += this.scoreVal;
             accumulatedCoins += this.coinVal;
             
-            // Random Utility Drops (Ammunition crate / Shield payload items)
             if (Math.random() < 0.25) {
                 items.push(new CollectibleItem(this.x, this.y, Math.random() < 0.5 ? 'SHIELD' : 'MISSILE'));
             }
-            return true; // Marked dead
+            return true; 
         }
         return false;
     }
@@ -912,7 +896,6 @@ class EnemyBase {
         ctx.strokeStyle = 'rgba(255, 0, 85, 0.3)';
         ctx.lineWidth = 1.5;
 
-        // Render distinct aircraft geometry hulls by dynamic paths
         ctx.beginPath();
         if (this.type === 'DRONE') {
             ctx.arc(0, 0, this.width/2, 0, Math.PI*2);
@@ -922,7 +905,6 @@ class EnemyBase {
             ctx.fillRect(-this.width/4, -2, 4, 4);
         } 
         else if (this.type === 'BOMBER') {
-            // Heavy delta wing fuselage blueprint geometry
             ctx.moveTo(-this.width/2, 0);
             ctx.lineTo(-this.width/6, -this.height/2);
             ctx.lineTo(this.width/3, -this.height/2);
@@ -934,7 +916,6 @@ class EnemyBase {
             ctx.fill(); ctx.stroke();
         } 
         else if (this.type === 'STEALTH') {
-            // Hyper angular geometry hull profile lines
             ctx.moveTo(-this.width/2, 0);
             ctx.lineTo(0, -this.height/2);
             ctx.lineTo(this.width/2, 0);
@@ -943,7 +924,6 @@ class EnemyBase {
             ctx.fill(); ctx.stroke();
         }
         else if (this.type === 'BOSS') {
-            // Massive Heavy Command Cruiser Interceptor geometry profile
             ctx.moveTo(-this.width/2, 0);
             ctx.lineTo(-this.width/4, -this.height/2);
             ctx.lineTo(this.width/2, -this.height/3);
@@ -952,17 +932,15 @@ class EnemyBase {
             ctx.lineTo(-this.width/4, this.height/2);
             ctx.closePath();
             ctx.fill(); ctx.stroke();
-            // Health overlay bar for flagship boss entities
             this.drawBossHealthBar();
         }
         else if (this.type === 'SUPER_BOSS') {
-            // Sky Carrier Dreadnought Flagship
             ctx.fillRect(-this.width/2, -this.height/2, this.width, this.height);
             ctx.fillStyle = '#111';
-            ctx.fillRect(-this.width/2 + 20, -10, this.width - 40, 20); // Runway visual element
+            ctx.fillRect(-this.width/2 + 20, -10, this.width - 40, 20); 
             this.drawBossHealthBar();
         }
-        else { // Standard Aggressive Escort Fighter
+        else { 
             ctx.moveTo(-this.width/2, 0);
             ctx.lineTo(this.width/2, -this.height/2);
             ctx.lineTo(this.width/4, 0);
@@ -975,7 +953,7 @@ class EnemyBase {
     }
 
     drawBossHealthBar() {
-        ctx.restore(); // Exit localized coordinate canvas context transforms temporarily
+        ctx.restore(); 
         ctx.save();
         let barW = 300;
         let bx = (canvas.width - barW) / 2;
@@ -990,11 +968,10 @@ class EnemyBase {
         ctx.fillStyle = '#fff';
         ctx.font = 'bold 12px sans-serif';
         ctx.fillText(this.type === 'SUPER_BOSS' ? 'SKY CARRIER DREADNOUGHT' : 'SWARM OVERLORD COMMAND JET', bx, by - 6);
-        ctx.translate(this.x, this.y); // Return transform alignment back to stack consistency loop
+        ctx.translate(this.x, this.y); 
     }
 }
 
-// Enemy Factory Blueprint Generation Tables
 const EnemyTypeRegistry = {
     DRONE: { type: 'DRONE', width: 28, height: 28, hp: 12, speed: 4.5, fireRate: 1.8, scoreVal: 100, coinVal: 10, color: '#7f8c8d' },
     FIGHTER: { type: 'FIGHTER', width: 46, height: 32, hp: 30, speed: 3.8, fireRate: 1.4, scoreVal: 250, coinVal: 25, color: '#95a5a6' },
@@ -1027,7 +1004,6 @@ class Bullet {
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
         ctx.fill();
         
-        // Bloom lighting visual effect
         ctx.fillStyle = this.isEnemy ? 'rgba(255,0,0,0.3)' : 'rgba(0,243,255,0.3)';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius * 2.5, 0, Math.PI*2);
@@ -1044,8 +1020,8 @@ class TrackingMissile {
         this.speed = 2.5;
         this.maxSpeed = 11;
         this.angle = isEnemy ? Math.PI : 0;
-        this.lifeTimer = 6.0; // Max lifetime tracking window persistence in seconds
-        this.turnSpeed = 0.065; // Precision turning tracking convergence scalar
+        this.lifeTimer = 6.0; 
+        this.turnSpeed = 0.065; 
         this.width = 18;
         this.height = 6;
     }
@@ -1053,25 +1029,20 @@ class TrackingMissile {
     update(dt) {
         this.lifeTimer -= dt;
         
-        // Recalculate Trajectory Vectors if targeted system entity is alive
         if (this.target && this.target.hp > 0) {
             let targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            // Dynamic Angular Vector Interpolation (Angle wrapping safe logic correction)
             let diff = targetAngle - this.angle;
             while (diff < -Math.PI) diff += Math.PI * 2;
             while (diff > Math.PI) diff -= Math.PI * 2;
             this.angle += Math.max(-this.turnSpeed, Math.min(this.turnSpeed, diff));
         } else {
-            // Target lost. Default lock lost, vector tracking drops to dead-reckoning trajectory
             this.target = null;
         }
 
-        // Accelerate through engine physical drive curves
         this.speed = Math.min(this.maxSpeed, this.speed + 0.3);
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed;
 
-        // Spawn smoke trail tracking particle objects
         if (Math.random() < 0.7) {
             particles.push(new ContrailParticle(this.x, this.y, 'rgba(200,200,200,0.4)', 0.6, 3));
         }
@@ -1082,11 +1053,9 @@ class TrackingMissile {
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
         
-        // Render precise missile hull geometry
         ctx.fillStyle = this.isEnemy ? '#ff3300' : '#ffffff';
         ctx.fillRect(-this.width/2, -this.height/2, this.width, this.height);
         
-        // Warhead tip indicator ring
         ctx.fillStyle = '#ff0000';
         ctx.fillRect(this.width/2 - 3, -this.height/2, 3, this.height);
         
@@ -1163,7 +1132,7 @@ class ExplosionParticle {
         this.life -= dt;
         this.x += this.vx;
         this.y += this.vy;
-        this.vx *= 0.96; // Atmospheric friction decay
+        this.vx *= 0.96; 
         this.vy *= 0.96;
     }
     draw() {
@@ -1182,7 +1151,7 @@ class CollectibleItem {
     constructor(x, y, type) {
         this.x = x;
         this.y = y;
-        this.type = type; // SHIELD or MISSILE
+        this.type = type; 
         this.size = 20;
         this.vx = -2;
         this.wobbleTimer = Math.random() * 10;
@@ -1236,18 +1205,15 @@ function processWaveSpawning(dt) {
     waveSpawnTimer += dt;
     let spawnRate = Math.max(1.2, 3.5 - (currentLevel * 0.2));
 
-    // Guard constraint: Prevent standard units during critical Boss Encounters
     let activeBoss = enemies.find(e => e.type === 'BOSS' || e.type === 'SUPER_BOSS');
     
     if (waveSpawnTimer >= spawnRate && !activeBoss) {
         waveSpawnTimer = 0;
         
-        // Trigger standard procedural entities based on active Level tiers
         let roll = Math.random();
         let chosenType = EnemyTypeRegistry.DRONE;
 
         if (currentLevel >= 5 && currentLevel % 5 === 0) {
-            // Level is a factor of 5 and no boss active: Initialize Boss Encounter Sequence
             spawnBoss();
             return;
         }
@@ -1285,7 +1251,6 @@ function addXp(amt) {
         currentXp -= xpNeeded;
         currentLevel++;
         xpNeeded = Math.floor(xpNeeded * 1.4);
-        // Level up reward: Refill structural capacities
         if (player) {
             player.hp = player.maxHp;
             player.missiles = player.missileCap;
@@ -1304,12 +1269,10 @@ function checkBoundingBoxCollision(obj1, obj2) {
 function runCollisionEvaluationSystem() {
     if (!player || player.hp <= 0) return;
 
-    // 1. Evaluate Player Bullets / Missiles hitting Enemies
     for (let p of playerProjectiles) {
         for (let e of enemies) {
             let hit = false;
             if (p instanceof Bullet) {
-                // Circular radius bounds checking against structural box dimensions
                 hit = (p.x > e.x - e.width/2 && p.x < e.x + e.width/2 && p.y > e.y - e.height/2 && p.y < e.y + e.height/2);
             } else {
                 hit = checkBoundingBoxCollision(p, e);
@@ -1320,18 +1283,16 @@ function runCollisionEvaluationSystem() {
                 let isDead = e.takeDamage(damage);
                 if (isDead) {
                     addXp(e.scoreVal / 2);
-                    // Special Condition: Super Boss clear ends campaign
                     if (e.type === 'SUPER_BOSS') {
                         triggerVictorySequence();
                     }
                 }
-                p.destroyed = true; // Mark missile/projectile spent
+                p.destroyed = true; 
                 break;
             }
         }
     }
 
-    // 2. Evaluate Enemy Ordinance hitting Player
     for (let ep of enemyProjectiles) {
         let hit = false;
         if (ep instanceof Bullet) {
@@ -1347,7 +1308,6 @@ function runCollisionEvaluationSystem() {
         }
     }
 
-    // 3. Evaluate Player Hitting Collectibles
     for (let it of items) {
         let d = Math.hypot(it.x - player.x, it.y - player.y);
         if (d < player.width/2 + it.size/2) {
@@ -1361,7 +1321,6 @@ function runCollisionEvaluationSystem() {
         }
     }
 
-    // 4. Structural Hull Ramming Collision Evaluation (Player vs Enemy Jet)
     for (let e of enemies) {
         if (checkBoundingBoxCollision(player, e)) {
             player.takeDamage(40);
@@ -1369,7 +1328,6 @@ function runCollisionEvaluationSystem() {
         }
     }
 
-    // Cleanup expended pooled assets
     playerProjectiles = playerProjectiles.filter(p => !p.destroyed && p.x < canvas.width + 100 && p.x > -100 && p.y > -100 && p.y < canvas.height + 100 && (p.lifeTimer === undefined || p.lifeTimer > 0));
     enemyProjectiles = enemyProjectiles.filter(ep => !ep.destroyed && ep.x < canvas.width + 100 && ep.x > -100 && ep.y > -100 && ep.y < canvas.height + 100 && (ep.lifeTimer === undefined || ep.lifeTimer > 0));
     enemies = enemies.filter(e => e.hp > 0 && e.x > -150);
@@ -1402,7 +1360,6 @@ function drawRadarMinimap() {
     rCtx.clearRect(0,0,100,100);
     let cx = 50, cy = 50, r = 48;
     
-    // Grid Radar Swirl lines
     rCtx.strokeStyle = 'rgba(0, 243, 255, 0.4)';
     rCtx.lineWidth = 1;
     rCtx.beginPath(); rCtx.arc(cx, cy, r, 0, Math.PI*2); rCtx.stroke();
@@ -1411,15 +1368,12 @@ function drawRadarMinimap() {
 
     if (!player) return;
     
-    // Scale vectors maps entire window to 100px diameter circle map bounding constraints
     let scaleX = 100 / canvas.width;
     let scaleY = 100 / canvas.height;
 
-    // Draw player point dot marker
     rCtx.fillStyle = 'var(--neon-blue)';
     rCtx.fillRect(player.x * scaleX - 1.5, player.y * scaleY - 1.5, 3, 3);
 
-    // Draw threat indicator blips
     rCtx.fillStyle = 'var(--neon-red)';
     for (let e of enemies) {
         let ex = e.x * scaleX;
@@ -1446,26 +1400,23 @@ function processEnvironmentalClouds(dt) {
  */
 function gameLoop(timestamp) {
     let dt = (timestamp - lastTime) / 1000;
-    if (isNaN(dt) || dt > 0.1) dt = 0.1; // Execution safety throttle clamping
+    if (isNaN(dt) || dt > 0.1) dt = 0.1; 
     lastTime = timestamp;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Process Environmental Backdrop Layer Independently
     processEnvironmentalClouds(dt);
 
     if (gameState === 'PLAYING') {
-        // Run Screen Shake mitigation step values
         if (screenShake > 0) {
             ctx.save();
             let dx = (Math.random() - 0.5) * screenShake;
             let dy = (Math.random() - 0.5) * screenShake;
             ctx.translate(dx, dy);
-            screenShake *= 0.9; // Linear damping decay factor
+            screenShake *= 0.9; 
             if (screenShake < 0.5) screenShake = 0;
         }
 
-        // Entity processing pipelines
         player.update(dt);
         player.draw();
 
@@ -1481,13 +1432,12 @@ function gameLoop(timestamp) {
 
         runCollisionEvaluationSystem();
         
-        if (screenShake > 0) ctx.restore(); // Finalized safe context restore
+        if (screenShake > 0) ctx.restore(); 
 
         updateDomHud();
         drawRadarMinimap();
         
     } else {
-        // Draw static entities in greyed or blur background state behind windows
         if (player) player.draw();
         for (let e of enemies) e.draw();
         for (let p of playerProjectiles) p.draw();
@@ -1504,7 +1454,6 @@ function gameLoop(timestamp) {
 function initGameSession() {
     AudioSynth.init();
     
-    // Resolve core character configurations against active selection model
     let jetCfg = HangarData.find(h => h.id === saveState.equippedAircraft) || HangarData[0];
     
     player = new PlayerJet(jetCfg);
@@ -1521,7 +1470,6 @@ function initGameSession() {
     xpNeeded = 100;
     waveSpawnTimer = 0;
 
-    // Fire up baseline Audio engine loops
     if (engineAudioHandle) { try { engineAudioHandle.osc.stop(); } catch(e){} }
     engineAudioHandle = AudioSynth.playEngine(65);
 
@@ -1532,11 +1480,10 @@ function endGameSequence() {
     gameState = 'GAMEOVER';
     if (engineAudioHandle) { try { engineAudioHandle.gain.gain.value = 0; } catch(e){} }
     
-    // Write out metrics to global persistence ledger profiles
     saveState.coins += accumulatedCoins;
     saveState.highScores.push(score);
     saveState.highScores.sort((a,b) => b-a);
-    saveState.highScores = saveState.highScores.slice(0, 5); // Retain top 5
+    saveState.highScores = saveState.highScores.slice(0, 5); 
     SaveSystem.saveData(saveState);
 
     document.getElementById('game-over-title').innerText = "AIRCRAFT DESTROYED";
@@ -1549,7 +1496,7 @@ function triggerVictorySequence() {
     gameState = 'GAMEOVER';
     if (engineAudioHandle) { try { engineAudioHandle.gain.gain.value = 0; } catch(e){} }
     
-    saveState.coins += (accumulatedCoins + 2000); // Massive Operations Victory dividend
+    saveState.coins += (accumulatedCoins + 2000); 
     saveState.highScores.push(score);
     saveState.highScores.sort((a,b) => b-a);
     saveState.highScores = saveState.highScores.slice(0, 5);
@@ -1564,7 +1511,7 @@ function triggerVictorySequence() {
 function togglePause() {
     if (gameState === 'PLAYING') {
         gameState = 'PAUSED';
-        if (engineAudioHandle) engineAudioHandle.gain.gain.value = 0.005; // Drop speed engine hum down
+        if (engineAudioHandle) engineAudioHandle.gain.gain.value = 0.005; 
         switchUiState('PAUSED');
     } else if (gameState === 'PAUSED') {
         gameState = 'PLAYING';
@@ -1576,7 +1523,6 @@ function togglePause() {
 function switchUiState(targetState) {
     gameState = targetState;
     
-    // Hide all panels
     document.getElementById('main-menu').classList.add('hidden');
     document.getElementById('hud').classList.add('hidden');
     document.getElementById('shop-screen').classList.add('hidden');
@@ -1598,7 +1544,6 @@ function switchUiState(targetState) {
     }
 }
 
-// UI Dom Components Dynamic Building
 function renderLeaderboardDom() {
     const box = document.getElementById('leaderboard-list');
     box.innerHTML = '';
@@ -1664,7 +1609,6 @@ window.equipAircraft = function(id) {
     renderShopGridDom();
 };
 
-// Bind Core Dom UI Action Interceptors
 document.getElementById('btn-start').addEventListener('click', initGameSession);
 document.getElementById('btn-open-shop').addEventListener('click', () => switchUiState('SHOP'));
 document.getElementById('btn-close-shop').addEventListener('click', () => switchUiState('MENU'));
@@ -1676,15 +1620,12 @@ document.getElementById('btn-abort').addEventListener('click', () => {
 document.getElementById('btn-restart').addEventListener('click', initGameSession);
 document.getElementById('btn-to-menu').addEventListener('click', () => switchUiState('MENU'));
 
-// Populate historical clouds architecture before rendering
 for(let i=0; i<10; i++) {
     clouds.push(new Cloud(true));
 }
 
-// Start Processing Engine
 switchUiState('MENU');
 requestAnimationFrame(gameLoop);
-
 </script>
 </body>
 </html>
